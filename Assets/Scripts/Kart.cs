@@ -19,6 +19,7 @@ public class Kart : MonoBehaviour {
 	
 	void FixedUpdate () {
 		KartController kc = GetComponent<KartController>();
+		Rigidbody rb = GetComponent<Rigidbody>();
 		
 		velocity += kc.acceleration * Time.fixedDeltaTime * maxAcceleration 
 			* transform.forward;
@@ -29,9 +30,15 @@ public class Kart : MonoBehaviour {
 
 		velocity = forwardSpeed * transform.forward;
 
-		transform.position += velocity;
+		// transform.position += velocity;
+		rb.MovePosition(rb.position + velocity);
 		
         float angle = kc.steering * Time.fixedDeltaTime * maxSteering * speedToSteeringRatio.Evaluate(forwardSpeed / maxSpeed);
-        transform.Rotate(transform.up, angle);
+        // transform.Rotate();
+		rb.MoveRotation(rb.rotation * Quaternion.AngleAxis(angle, transform.up));
+	}
+	
+	private void OnCollisionEnter(Collision other) {
+		// velocity = -velocity;
 	}
 }
