@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a9d91214b73c9ab48aa9bbddc058788b
+guid: 622abac8d84425d40b9447550b3c3043
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -9,8 +9,7 @@ ModelImporter:
     400000: NurbsPath
     400002: Plane
     400004: //RootNode
-    2100000: unnamed
-    2100002: Material
+    2100000: Material_001__ramp_png
     2300000: NurbsPath
     2300002: Plane
     2300004: //RootNode
