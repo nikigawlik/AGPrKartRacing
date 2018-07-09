@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Kart : MonoBehaviour {
+	public GameController gameController;
 	public float maxAcceleration = 6f;
 
 	public float maxSpeed = 16f;
@@ -16,17 +17,29 @@ public class Kart : MonoBehaviour {
 	public float jumpOnCollisionStrength = 0.6f;
 	public float airRotationLerp = 0.1f;
 
+	public float resetTime = 2f;
+	public float afterRespawnTime = .2f;
+
 	[Header("Ray based rotation settings")]
 	public float rayStartHeight = 1f;
 	public float rayLength = 2f;
 	public float maxAngleChange = 30;
 
 	private bool grounded;
+	private GameObject lastCheckpointZone;
 	private LayerMask onlyGroundMask;
+
+	private float resetTimer;
 
 	// Use this for initialization
 	void Start () {
 		onlyGroundMask = LayerMask.GetMask(new string[] {"Ground"});
+	}
+
+	private void Update() {
+		if(Input.GetKey("r")) {
+			ResetKart();
+		}
 	}
 	
 	void FixedUpdate () {
@@ -72,6 +85,27 @@ public class Kart : MonoBehaviour {
 	private void OnCollisionEnter(Collision other) {
 		Vector3 sidewaysImpulse = other.impulse - Vector3.Dot(transform.up, other.impulse) * transform.up;
 		GetComponent<Rigidbody>().AddForce(transform.up * sidewaysImpulse.magnitude * jumpOnCollisionStrength, ForceMode.Impulse);
+    }
+
+    private void ResetKart()
+    {
+		if(resetTimer > 0) {
+			return;
+		}
+		resetTimer = resetTime + afterRespawnTime;
+        StartCoroutine("ResetCoroutine");
+    }
+
+    private void OnTriggerEnter(Collider other) {
+		// save checkpoints
+		if(other.CompareTag("CheckpointZone")) {
+			lastCheckpointZone = other.gameObject;
+		}
+		// check death
+		if(other.gameObject.CompareTag("KillZone"))
+        {
+            ResetKart();
+        }
 	}
 	
 	private void OnDrawGizmosSelected() {
@@ -83,5 +117,25 @@ public class Kart : MonoBehaviour {
 
 		Gizmos.color = Color.red;
 		Gizmos.DrawLine(from, from + dir);
+	}
+
+	IEnumerator ResetCoroutine() {
+		while(resetTimer > afterRespawnTime) {
+			resetTimer -= Time.deltaTime;
+			gameController.screenDarkenImage.color = new Color(0, 0, 0, 1f - ((resetTimer - afterRespawnTime) / resetTime));
+			yield return null;
+		} 
+		Rigidbody rb = GetComponent<Rigidbody>();
+		rb.MovePosition(lastCheckpointZone.transform.position);
+		rb.MoveRotation(transform.rotation = lastCheckpointZone.transform.rotation);
+		rb.velocity = Vector3.zero;
+		rb.angularVelocity = Vector3.zero;
+
+		while(resetTimer > 0) {
+			resetTimer -= Time.deltaTime;
+			gameController.screenDarkenImage.color = new Color(0, 0, 0, (resetTimer / afterRespawnTime));
+			yield return null;
+		} 
+		gameController.screenDarkenImage.color = new Color(0, 0, 0, 0);
 	}
 }
