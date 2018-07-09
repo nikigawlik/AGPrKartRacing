@@ -13,9 +13,13 @@ public class Kart : MonoBehaviour {
 	public float maxSteering = 45f;
 	public AnimationCurve speedToSteeringRatio;
 
+	public float jumpOnCollisionStrength = 0.6f;
+	public float airRotationLerp = 0.1f;
+
 	[Header("Ray based rotation settings")]
 	public float rayStartHeight = 1f;
 	public float rayLength = 2f;
+	public float maxAngleChange = 30;
 
 	private bool grounded;
 	private LayerMask onlyGroundMask;
@@ -36,7 +40,9 @@ public class Kart : MonoBehaviour {
 		if(grounded) {
 			Quaternion rotation = Quaternion.LookRotation(hit.normal, transform.right)
 				* Quaternion.Euler(180, -90, -90);
-			transform.rotation = rotation;
+			if(Quaternion.Angle(rotation, transform.rotation) <= maxAngleChange) {
+				transform.rotation = rotation;
+			}
 
 			float forwardSpeed = Vector3.Dot(rb.velocity, transform.forward);
 			float deltaSpeed = Mathf.Clamp(maxSpeed - forwardSpeed, 0, maxAcceleration * kc.acceleration);
@@ -50,12 +56,32 @@ public class Kart : MonoBehaviour {
 			float angle = kc.steering * Time.fixedDeltaTime * maxSteering 
 				* speedToSteeringRatio.Evaluate(Vector3.Dot(rb.velocity, transform.forward) / maxSpeed);
 			transform.Rotate(Vector3.up, angle);
+		} else {
+			Vector3 angles = transform.rotation.eulerAngles;
+			// angles = Vector3.Lerp(angles, new Vector3(0, angles.y, 0), airRotationLerp);
+			angles = new Vector3(
+				Mathf.LerpAngle(angles.x, 0, airRotationLerp * Time.fixedDeltaTime), 
+				angles.y, 
+				Mathf.LerpAngle(angles.z, 0, airRotationLerp * Time.fixedDeltaTime)
+			);
+			
+			transform.rotation = Quaternion.Euler(angles);
 		}
+	}
+
+	private void OnCollisionEnter(Collision other) {
+		Vector3 sidewaysImpulse = other.impulse - Vector3.Dot(transform.up, other.impulse) * transform.up;
+		GetComponent<Rigidbody>().AddForce(transform.up * sidewaysImpulse.magnitude * jumpOnCollisionStrength, ForceMode.Impulse);
 	}
 	
 	private void OnDrawGizmosSelected() {
 		// if(grounded) {
 		// 	Gizmos.DrawSphere(transform.position, 1.3f);
 		// }
+		Vector3 from = transform.position + transform.up * rayStartHeight;
+		Vector3 dir = -transform.up * rayLength;
+
+		Gizmos.color = Color.red;
+		Gizmos.DrawLine(from, from + dir);
 	}
 }
