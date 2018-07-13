@@ -6,9 +6,12 @@ public class CameraControllerCustom : MonoBehaviour
 	public float lookSpeed = 4f;
 	public GameObject following;
 	
-	Transform followTransform;
-	float initialDistance;
-	Vector3 initialPos;
+	private Transform followTransform;
+	private float initialDistance;
+	private Vector3 initialPos;
+
+	private Vector3 initialLocalPos;
+	private Quaternion initialLocalRot;
 
 	private void Start() {
 		following = following != null? following : GameObject.Find("HappyPoint");
@@ -18,6 +21,12 @@ public class CameraControllerCustom : MonoBehaviour
 
 		initialDistance = CalcPlaneDistance(transform.position, followTransform.position);
 		initialPos = (transform.position - followTransform.position);
+
+		initialLocalPos	= followTransform.InverseTransformPoint(transform.position);
+	}
+
+	public void ReFocusOnTarget() {
+		transform.position = followTransform.TransformPoint(initialLocalPos);
 	}
 
 	void FixedUpdate() {

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Kart : MonoBehaviour {
 	public GameController gameController;
+	public GameObject cameraRig;
+
 	public float maxAcceleration = 6f;
 
 	public float maxSpeed = 16f;
@@ -126,10 +128,15 @@ public class Kart : MonoBehaviour {
 			yield return null;
 		} 
 		Rigidbody rb = GetComponent<Rigidbody>();
-		rb.MovePosition(lastCheckpointZone.transform.position);
+		rb.MovePosition(transform.position = lastCheckpointZone.transform.position);
 		rb.MoveRotation(transform.rotation = lastCheckpointZone.transform.rotation);
 		rb.velocity = Vector3.zero;
 		rb.angularVelocity = Vector3.zero;
+
+		CameraControllerCustom ccc = cameraRig.GetComponent<CameraControllerCustom>();
+		if(ccc != null) {
+			ccc.ReFocusOnTarget();
+		}
 
 		while(resetTimer > 0) {
 			resetTimer -= Time.deltaTime;
