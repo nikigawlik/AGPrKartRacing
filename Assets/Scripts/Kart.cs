@@ -122,6 +122,11 @@ public class Kart : MonoBehaviour {
 	}
 
 	IEnumerator ResetCoroutine() {
+        KartController kartController = GetComponent<KartController>();
+        kartController.enabled = false;
+		kartController.steering = 0;
+		kartController.acceleration = 0;
+
 		while(resetTimer > afterRespawnTime) {
 			resetTimer -= Time.deltaTime;
 			gameController.screenDarkenImage.color = new Color(0, 0, 0, 1f - ((resetTimer - afterRespawnTime) / resetTime));
@@ -144,5 +149,6 @@ public class Kart : MonoBehaviour {
 			yield return null;
 		} 
 		gameController.screenDarkenImage.color = new Color(0, 0, 0, 0);
+        kartController.enabled = true;
 	}
 }
