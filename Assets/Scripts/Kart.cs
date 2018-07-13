@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Kart : MonoBehaviour {
 	public GameController gameController;
+	public RaceController raceController;
 	public GameObject cameraRig;
 
 	public float forwardsAcceleration = 6f;
@@ -29,7 +30,7 @@ public class Kart : MonoBehaviour {
 	public float maxAngleChange = 30;
 
 	private bool grounded;
-	private GameObject lastCheckpointZone;
+	private GameObject lasRespawnZone;
 	private LayerMask onlyGroundMask;
 
 	private float resetTimer;
@@ -111,9 +112,13 @@ public class Kart : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
+		// save respawn points
+		if(other.CompareTag("RespawnZone")) {
+			lasRespawnZone = other.gameObject;
+		}
 		// save checkpoints
 		if(other.CompareTag("CheckpointZone")) {
-			lastCheckpointZone = other.gameObject;
+			raceController.HitCheckpoint(other.gameObject);
 		}
 		// check death
 		if(other.gameObject.CompareTag("KillZone"))
@@ -145,8 +150,8 @@ public class Kart : MonoBehaviour {
 			yield return null;
 		} 
 		Rigidbody rb = GetComponent<Rigidbody>();
-		rb.MovePosition(transform.position = lastCheckpointZone.transform.position);
-		rb.MoveRotation(transform.rotation = lastCheckpointZone.transform.rotation);
+		rb.MovePosition(transform.position = lasRespawnZone.transform.position);
+		rb.MoveRotation(transform.rotation = lasRespawnZone.transform.rotation);
 		rb.velocity = Vector3.zero;
 		rb.angularVelocity = Vector3.zero;
 

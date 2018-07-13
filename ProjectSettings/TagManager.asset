@@ -6,6 +6,7 @@ TagManager:
   tags:
   - KillZone
   - CheckpointZone
+  - RespawnZone
   layers:
   - Default
   - TransparentFX
