@@ -608,6 +608,21 @@ Prefab:
       propertyPath: cameraRig
       value: 
       objectReference: {fileID: 1952448729}
+    - target: {fileID: 114921574143546424, guid: 7a274837b0fd03e43a4b60fef23d9983,
+        type: 2}
+      propertyPath: forwardsAcceleration
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 114921574143546424, guid: 7a274837b0fd03e43a4b60fef23d9983,
+        type: 2}
+      propertyPath: backwardsAcceleration
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114921574143546424, guid: 7a274837b0fd03e43a4b60fef23d9983,
+        type: 2}
+      propertyPath: minSpeed
+      value: -12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7a274837b0fd03e43a4b60fef23d9983, type: 2}
   m_IsPrefabParent: 0

@@ -6,10 +6,11 @@ public class Kart : MonoBehaviour {
 	public GameController gameController;
 	public GameObject cameraRig;
 
-	public float maxAcceleration = 6f;
+	public float forwardsAcceleration = 6f;
+	public float backwardsAcceleration = 3f;
 
 	public float maxSpeed = 16f;
-	public float minSpeed = -4f;
+	public float minSpeed = -6f; // going backwards
 
 	public Vector3 localDragFactors;
 	
@@ -53,27 +54,38 @@ public class Kart : MonoBehaviour {
 			out hit, rayLength, onlyGroundMask);
 
 		if(grounded) {
+			// snap the rotation to match the ground normal (up to a certain angle)
 			Quaternion rotation = Quaternion.LookRotation(hit.normal, transform.right)
 				* Quaternion.Euler(180, -90, -90);
 			if(Quaternion.Angle(rotation, transform.rotation) <= maxAngleChange) {
 				transform.rotation = rotation;
 			}
 
+			// calculate speed in the forward direction
 			float forwardSpeed = Vector3.Dot(rb.velocity, transform.forward);
-			float deltaSpeed = Mathf.Clamp(maxSpeed - forwardSpeed, 0, maxAcceleration * kc.acceleration);
+			// calculate speed needed to get to desired speed and clamp accoring to accelerations
+			float deltaSpeed;
+			if (kc.acceleration > 0) {
+				deltaSpeed = Mathf.Clamp(maxSpeed - forwardSpeed, 0, forwardsAcceleration * kc.acceleration);
+			} else {
+				deltaSpeed = Mathf.Clamp(minSpeed - forwardSpeed, backwardsAcceleration * kc.acceleration, 0);
+			}
+
 			rb.AddForce(transform.forward * deltaSpeed, ForceMode.Acceleration);
 
+			// apply drag (different drag in different directions)
 			Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
 			Vector3 localDrag = Vector3.Scale(-localVelocity, localDragFactors);
 
 			rb.AddForce(transform.TransformDirection(localDrag), ForceMode.Acceleration);
 		
+			// rotate kart depending on steering and speed
 			float angle = kc.steering * Time.fixedDeltaTime * maxSteering 
 				* speedToSteeringRatio.Evaluate(Vector3.Dot(rb.velocity, transform.forward) / maxSpeed);
 			transform.Rotate(Vector3.up, angle);
 		} else {
+			// slowly rotate kart upright while in air
 			Vector3 angles = transform.rotation.eulerAngles;
-			// angles = Vector3.Lerp(angles, new Vector3(0, angles.y, 0), airRotationLerp);
 			angles = new Vector3(
 				Mathf.LerpAngle(angles.x, 0, airRotationLerp * Time.fixedDeltaTime), 
 				angles.y, 
