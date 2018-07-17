@@ -6,6 +6,7 @@ public class KartController : MonoBehaviour {
 
 	public float steering = 0;
 	public float acceleration = 0;
+	public bool restart;
 
 	// Use this for initialization
 	void Start () {
@@ -16,5 +17,12 @@ public class KartController : MonoBehaviour {
 	void Update () {
 		steering = Input.GetAxis("Horizontal");
 		acceleration = Input.GetAxis("Vertical");
+		restart = Input.GetKeyDown("r");
+	}
+
+	private void OnDisable() {
+		steering = 0;
+		acceleration = 0;
+		restart = false;
 	}
 }

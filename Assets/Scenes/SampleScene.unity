@@ -1038,7 +1038,9 @@ MonoBehaviour:
   - {fileID: 1655262957}
   - {fileID: 724262900}
   - {fileID: 371227161}
-  numberOfRounds: 3
+  numberOfRounds: 1
+  animationsOnFinish:
+  - {fileID: 1317984411}
   startSequenceImages:
   - {fileID: 2021603264}
   - {fileID: 222945311}
@@ -1058,6 +1060,7 @@ GameObject:
   - component: {fileID: 1317984408}
   - component: {fileID: 1317984410}
   - component: {fileID: 1317984409}
+  - component: {fileID: 1317984411}
   m_Layer: 5
   m_Name: Time
   m_TagString: Untagged
@@ -1082,7 +1085,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 10, y: -37.83}
-  m_SizeDelta: {x: 108.54, y: 26.83}
+  m_SizeDelta: {x: 108.54001, y: 26.830002}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1317984409
 MonoBehaviour:
@@ -1117,6 +1120,21 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1317984407}
+--- !u!111 &1317984411
+Animation:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1317984407}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: a55ba3a7b7eff00468e47744f9f57c59, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: a55ba3a7b7eff00468e47744f9f57c59, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!4 &1327253580 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4337549431245310, guid: 77bb2ef01c59e28488908d180dc937db,

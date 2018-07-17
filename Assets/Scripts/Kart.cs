@@ -41,7 +41,8 @@ public class Kart : MonoBehaviour {
 	}
 
 	private void Update() {
-		if(Input.GetKey("r")) {
+		KartController kc = GetComponent<KartController>();
+		if(kc.restart) {
 			ResetKart();
 		}
 	}
@@ -141,8 +142,6 @@ public class Kart : MonoBehaviour {
 	IEnumerator ResetCoroutine() {
         KartController kartController = GetComponent<KartController>();
         kartController.enabled = false;
-		kartController.steering = 0;
-		kartController.acceleration = 0;
 
 		while(resetTimer > afterRespawnTime) {
 			resetTimer -= Time.deltaTime;

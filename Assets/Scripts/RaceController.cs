@@ -7,6 +7,7 @@ public class RaceController : MonoBehaviour {
 	public GameObject[] karts;
 	public GameObject[] checkpoints;
 	public int numberOfRounds = 3;
+	public Animation[] animationsOnFinish;
 
 	[Header("UI References")]
 	public Image[] startSequenceImages;
@@ -19,7 +20,7 @@ public class RaceController : MonoBehaviour {
     private int currentRound;
 	private float secondsSinceStart;
 
-	private bool raceStarted = false;
+	private bool isTimerOn = false;
 
     public int CurrentRound
     {
@@ -44,7 +45,7 @@ public class RaceController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(raceStarted) {
+		if(isTimerOn) {
 			secondsSinceStart += Time.deltaTime;
 		}
 
@@ -69,8 +70,8 @@ public class RaceController : MonoBehaviour {
 				foreach (GameObject kart in karts)
 				{
 					kart.GetComponent<KartController>().enabled = true;
-					raceStarted = true;
 				}
+				isTimerOn = true;
 				yield return new WaitForSeconds(lastImageTime);
 			}
 			startSequenceImages[i].gameObject.SetActive(false);
@@ -82,7 +83,24 @@ public class RaceController : MonoBehaviour {
 			currentCheckpointIndex++;
 			currentCheckpointIndex = currentCheckpointIndex % checkpoints.Length;
 			if(currentCheckpointIndex == 1) {
-				CurrentRound++;
+
+				if(CurrentRound + 1 < numberOfRounds) {
+					CurrentRound++;
+				} else {
+					// game finished
+					isTimerOn = false;
+					
+					foreach (GameObject kart in karts)
+					{
+                        KartController kartController = kart.GetComponent<KartController>();
+                        kartController.enabled = false;
+					}
+
+					foreach (Animation anim in animationsOnFinish)
+					{
+						anim.Play();
+					}
+				}
 			}
 		}
 	}
