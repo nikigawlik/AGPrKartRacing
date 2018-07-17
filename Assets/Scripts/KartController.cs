@@ -18,6 +18,10 @@ public class KartController : MonoBehaviour {
 		steering = Input.GetAxis("Horizontal");
 		acceleration = Input.GetAxis("Vertical");
 		restart = Input.GetKeyDown("r");
+
+		if(restart && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))) {
+			RaceController.instance.RestartRace();
+		}
 	}
 
 	private void OnDisable() {

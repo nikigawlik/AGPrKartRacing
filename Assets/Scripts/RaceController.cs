@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class RaceController : MonoBehaviour {
+	public static RaceController instance;
+
 	public GameObject[] karts;
 	public GameObject[] checkpoints;
 	public int numberOfRounds = 3;
 	public Animation[] animationsOnFinish;
+	public Animator[] animatorsPlayOnFinish;
 
 	[Header("UI References")]
 	public Image[] startSequenceImages;
@@ -15,6 +19,7 @@ public class RaceController : MonoBehaviour {
 	public float lastImageTime = 2;
 	public Text roundsCounterText;
 	public Text timeText;
+	public Button restartButton;
 
 	private int currentCheckpointIndex = 1;
     private int currentRound;
@@ -36,11 +41,25 @@ public class RaceController : MonoBehaviour {
         }
     }
 
+	private void Awake() {
+		if(instance == null) {
+			instance = this;
+		} else if(instance != this) {
+			Destroy(this);
+		}
+	}
+
     // Use this for initialization
-    void Start () {
+    void Start () {		
 		StartCoroutine("StartSequence");
 		CurrentRound = 0;
 		secondsSinceStart = 0;
+
+		restartButton.onClick.AddListener(RestartRace);
+	}
+
+	public void RestartRace() {
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 	
 	// Update is called once per frame
@@ -99,6 +118,11 @@ public class RaceController : MonoBehaviour {
 					foreach (Animation anim in animationsOnFinish)
 					{
 						anim.Play();
+					}
+
+					foreach (Animator anim in animatorsPlayOnFinish)
+					{
+						anim.SetTrigger("play");
 					}
 				}
 			}
