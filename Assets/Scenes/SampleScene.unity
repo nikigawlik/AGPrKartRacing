@@ -504,6 +504,22 @@ Prefab:
       propertyPath: raceController
       value: 
       objectReference: {fileID: 1174448409}
+    - target: {fileID: 4009589364676900, guid: 7a274837b0fd03e43a4b60fef23d9983, type: 2}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628866451367142, guid: 7a274837b0fd03e43a4b60fef23d9983, type: 2}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4104527374795498, guid: 7a274837b0fd03e43a4b60fef23d9983, type: 2}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4891710181091920, guid: 7a274837b0fd03e43a4b60fef23d9983, type: 2}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7a274837b0fd03e43a4b60fef23d9983, type: 2}
   m_IsPrefabParent: 0
@@ -690,6 +706,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &523508553 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1442580043834526, guid: 7a274837b0fd03e43a4b60fef23d9983,
+    type: 2}
+  m_PrefabInternal: {fileID: 358406768}
+--- !u!1 &525219416 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1437937988008046, guid: 7a274837b0fd03e43a4b60fef23d9983,
+    type: 2}
+  m_PrefabInternal: {fileID: 358406768}
 --- !u!1 &724262900
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,6 +950,27 @@ Transform:
   m_PrefabParentObject: {fileID: 4932383338238552, guid: 7a274837b0fd03e43a4b60fef23d9983,
     type: 2}
   m_PrefabInternal: {fileID: 358406768}
+--- !u!114 &1017136618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1017136610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe1da06700ca24f46bf07b36c73bfe44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontWheels:
+  - {fileID: 523508553}
+  - {fileID: 525219416}
+  backWheels:
+  - {fileID: 1673878919}
+  - {fileID: 1193891657}
+  steeringWheel: {fileID: 1805018421}
+  body: {fileID: 0}
+  wheelSpeedFactor: 0.5
+  steeringAngle: 25
 --- !u!1001 &1023166226
 Prefab:
   m_ObjectHideFlags: 0
@@ -1131,6 +1178,11 @@ MonoBehaviour:
   roundsCounterText: {fileID: 374516846}
   timeText: {fileID: 1982330888}
   restartButton: {fileID: 1440890391}
+--- !u!1 &1193891657 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1029383679497938, guid: 7a274837b0fd03e43a4b60fef23d9983,
+    type: 2}
+  m_PrefabInternal: {fileID: 358406768}
 --- !u!1 &1317984407
 GameObject:
   m_ObjectHideFlags: 0
@@ -1503,6 +1555,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1673878919 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1021933893175036, guid: 7a274837b0fd03e43a4b60fef23d9983,
+    type: 2}
+  m_PrefabInternal: {fileID: 358406768}
+--- !u!1 &1805018421 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1994250847002734, guid: 7a274837b0fd03e43a4b60fef23d9983,
+    type: 2}
+  m_PrefabInternal: {fileID: 358406768}
 --- !u!1001 &1863137782
 Prefab:
   m_ObjectHideFlags: 0

@@ -55,37 +55,43 @@ public class Kart : MonoBehaviour {
 		grounded = Physics.Raycast(transform.position + transform.up * rayStartHeight, -transform.up, 
 			out hit, rayLength, onlyGroundMask);
 
-		if(grounded) {
-			// snap the rotation to match the ground normal (up to a certain angle)
-			Quaternion rotation = Quaternion.LookRotation(hit.normal, transform.right)
-				* Quaternion.Euler(180, -90, -90);
-			if(Quaternion.Angle(rotation, transform.rotation) <= maxAngleChange) {
-				transform.rotation = rotation;
-			}
+		if(grounded)
+        {
+            // snap the rotation to match the ground normal (up to a certain angle)
+            Quaternion rotation = Quaternion.LookRotation(hit.normal, transform.right)
+                * Quaternion.Euler(180, -90, -90);
+            if (Quaternion.Angle(rotation, transform.rotation) <= maxAngleChange)
+            {
+                transform.rotation = rotation;
+            }
 
-			// calculate speed in the forward direction
-			float forwardSpeed = Vector3.Dot(rb.velocity, transform.forward);
-			// calculate speed needed to get to desired speed and clamp accoring to accelerations
-			float deltaSpeed;
-			if (kc.acceleration > 0) {
-				deltaSpeed = Mathf.Clamp(maxSpeed - forwardSpeed, 0, forwardsAcceleration * kc.acceleration);
-			} else {
-				deltaSpeed = Mathf.Clamp(minSpeed - forwardSpeed, backwardsAcceleration * kc.acceleration, 0);
-			}
+            // calculate speed in the forward direction
+            float forwardSpeed = GetForwardSpeed();
+            // calculate speed needed to get to desired speed and clamp accoring to accelerations
+            float deltaSpeed;
+            if (kc.acceleration > 0)
+            {
+                deltaSpeed = Mathf.Clamp(maxSpeed - forwardSpeed, 0, forwardsAcceleration * kc.acceleration);
+            }
+            else
+            {
+                deltaSpeed = Mathf.Clamp(minSpeed - forwardSpeed, backwardsAcceleration * kc.acceleration, 0);
+            }
 
-			rb.AddForce(transform.forward * deltaSpeed, ForceMode.Acceleration);
+            rb.AddForce(transform.forward * deltaSpeed, ForceMode.Acceleration);
 
-			// apply drag (different drag in different directions)
-			Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
-			Vector3 localDrag = Vector3.Scale(-localVelocity, localDragFactors);
+            // apply drag (different drag in different directions)
+            Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
+            Vector3 localDrag = Vector3.Scale(-localVelocity, localDragFactors);
 
-			rb.AddForce(transform.TransformDirection(localDrag), ForceMode.Acceleration);
-		
-			// rotate kart depending on steering and speed
-			float angle = kc.steering * Time.fixedDeltaTime * maxSteering 
-				* speedToSteeringRatio.Evaluate(Vector3.Dot(rb.velocity, transform.forward) / maxSpeed);
-			transform.Rotate(Vector3.up, angle);
-		} else {
+            rb.AddForce(transform.TransformDirection(localDrag), ForceMode.Acceleration);
+
+            // rotate kart depending on steering and speed
+            float angle = kc.steering * Time.fixedDeltaTime * maxSteering
+                * speedToSteeringRatio.Evaluate(Vector3.Dot(rb.velocity, transform.forward) / maxSpeed);
+            transform.Rotate(Vector3.up, angle);
+        }
+        else {
 			// slowly rotate kart upright while in air
 			Vector3 angles = transform.rotation.eulerAngles;
 			angles = new Vector3(
@@ -98,7 +104,13 @@ public class Kart : MonoBehaviour {
 		}
 	}
 
-	private void OnCollisionEnter(Collision other) {
+    public float GetForwardSpeed()
+    {
+		Rigidbody rb = GetComponent<Rigidbody>();
+        return Vector3.Dot(rb.velocity, transform.forward);
+    }
+
+    private void OnCollisionEnter(Collision other) {
 		Vector3 sidewaysImpulse = other.impulse - Vector3.Dot(transform.up, other.impulse) * transform.up;
 		GetComponent<Rigidbody>().AddForce(transform.up * sidewaysImpulse.magnitude * jumpOnCollisionStrength, ForceMode.Impulse);
     }
